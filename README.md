@@ -120,6 +120,7 @@ binomial distribution:
 **Probability Calculation:**
 
 ``` math
+\displaylines{
 \textbf{Probability Density Function}\\
 P(X=r) = nCr \times p^r \times (1 − p)^{n-r} \\~\\
 \underline{Where: } \\
@@ -131,6 +132,7 @@ P(X=r) = nCr \times p^r \times (1 − p)^{n-r} \\~\\
 \\~\\
 \textbf{Cumulative Distribution Function}\\
 P(AD_{alt} \ge 2) = 1 - P(AD_{alt} = 0) - P(AD_{alt} = 1)
+}
 ```
 
 - $P(AD_{alt} \ge 2)$: Probability of observing at least 2 alternate
