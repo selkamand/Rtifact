@@ -60,11 +60,7 @@ Psupp <- artifact(
 
 ## The artifact algorithm.
 
-**F[or each sample]{.underline}**
-
-> **NOTE**
->
-> Please exclude samples with a small number of mutations \< 30 coding mutations
+**F[or each sample]{.underline}** (with a substantial number of mutations)
 
 1.  **Identify Mutations**: Select all autosomal, exonic mutations
 
@@ -74,9 +70,9 @@ Psupp <- artifact(
 
 4.  **Compute** $P_{supp}$: Calculate the proportion of expected variants we actually find support for.
 
-    $$
-     P_{supp} = \frac{N_{supp}}{N_{expected}}
-    $$
+$$
+P_{supp} = \frac{N_{supp}}{N_{expected}}
+$$
 
 [**Across the cohort**]{.underline}
 
