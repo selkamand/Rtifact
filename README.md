@@ -124,7 +124,7 @@ $$
 P(X=r) = nCr \times p^r \times (1 − p)^{n-r} \\~\\
 \underline{Where: } \\
 \textbf{n}\text{ - Number of events (RNA depth)} \\
-\textbf{r}\text{ - Number of required successes (# of alt supporting RNA reads)} \\
+\textbf{r}\text{ - Number of required successes (Number of alt supporting RNA reads)} \\
 \textbf{p}\text{ - Probability of one success (DNA}_{VAF}\text{)} \\
 \textbf{nCr}\text{ – Number of combinations ("n choose r")} \\
 \textbf{P(X=r)}\text{ – Probability of an exact number of successes happening. (i.e getting an exact number of Alt supporting reads in RNA)}
