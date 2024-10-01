@@ -1,0 +1,186 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# Rtifact
+
+<!-- badges: start -->
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/Rtifact)](https://CRAN.R-project.org/package=Rtifact)
+
+<!-- badges: end -->
+
+Rtifact leverages matched whole-genome sequencing (WGS) and RNA
+sequencing (RNA-seq) data to identify samples with an unexpectedly high
+number of DNA mutations lacking RNA support, indicating potential
+artificial mutations or DNA sample contamination.
+
+## Installation
+
+You can install the development version of Rtifact like so:
+
+``` r
+if (!require("remotes"))
+    install.packages("remotes")
+
+remotes::install_github("selkamand/Rtifact")
+```
+
+## Quick Start
+
+``` r
+library(Rtifact)
+
+
+# Create a sample data frame representing mutations in a single sample
+sample_data <- data.frame(
+  DNA_AF = c(0.5, 0.3, 0.2, 0.1),  # DNA variant allele frequencies
+  RNA_DP = c(100, 50, 20, 10),     # RNA read depths at each locus
+  RNA_AD = c(48, 15, 4, 0)         # RNA reads supporting the alternate allele
+)
+
+# Calculate Psupp for the sample
+Psupp <- artifact(
+  data = sample_data,
+  col_DNA_AF = "DNA_AF",
+  col_RNA_DP = "RNA_DP",
+  col_RNA_AD = "RNA_AD",
+  min_alt_supporting_reads = 2,
+  confidence = 0.95
+)
+```
+
+## The artifact algorithm.
+
+**F<u>or each sample</u>**
+
+> **NOTE**
+>
+> Please exclude samples with a small number of mutations \< 30 coding
+> mutations
+
+1.  **Identify Mutations**: Select all autosomal, exonic mutations
+
+2.  **Calculate Expected RNA Support:** Determine which DNA mutations
+    are expected to have RNA support (by default, ≥2 supporting reads)
+    based on DNA variant allele frequency ($\text{DNA}_{VAF}$) and RNA
+    depth ($RNA_{DP}$). Denote this count as $N_{expected}$. See
+    section: \[**Classifying mutations based on whether RNA support is
+    expected**\].
+
+3.  **Assess Actual Support**: Count how many of the mutations that
+    theoretically should have RNA support actually have support
+    ($N_{supp}$)
+
+4.  **Compute** $P_{supp}$: Calculate the proportion of expected
+    variants we actually find support for.
+
+    $$
+     P_{supp} = \frac{N_{supp}}{N_{expected}}
+    $$
+
+<u>**Across the cohort**</u>
+
+Repeat analysis for each sample in a cohort and identify the
+distribution of $P_{supp}$. This distribution is required to identify
+whether each sample has a ‘typical’ or ‘atypical’ proportion of DNA
+variants with RNA support
+
+### Interpreting RNA support level
+
+1.  Quantify outlieryness of $P{supp}$ for each sample
+2.  Classify samples based on degree of RNA support (relative to the
+    average). **RNA support level** should be **typical** or **low**.
+
+**Typical RNA Support**:
+
+- Indicates DNA mutations are likely genuine. At the very least, DNA
+  mutations were not artificially induced during library prep.
+
+**Low RNA Support** may suggest:
+
+1.  Absence of tumor cells in the RNA sample.
+2.  Contamination of genomic sample (but NOT the RNA sample) with
+    non-patient DNA.
+3.  Artificial DNA mutations from the library preparation
+
+### Classifying mutations based on whether RNA support is expected
+
+To determine if a DNA variant should ‘theoretically’ have RNA support,
+we must consider:
+
+1.  **DNA VAF:** The variant’s allele frequency in DNA (not corrected
+    for purity/ploidy)
+2.  **RNA Depth:** The read depth at the variant’s locus in RNA.
+3.  **Mutation Type:** Certain mutations (e.g., protein-truncating
+    variants) may not be expressed due to mechanisms like
+    nonsense-mediated decay \[Not added yet\].
+
+Assuming no allele-specific or cell-specific heterogeneity in
+expression, a variant’s expected RNA support is calculated using the
+binomial distribution:
+
+**Probability Calculation:**
+
+$$
+\textbf{Probability Density Function}\\
+P(X=r) = nCr \times p^r \times (1 − p)^{n-r} \\~\\
+\underline{Where: } \\
+\textbf{n}\text{ - Number of events (RNA depth)} \\
+\textbf{r}\text{ - Number of required successes (# of alt supporting RNA reads)} \\
+\textbf{p}\text{ - Probability of one success (DNA}_{VAF}\text{)} \\
+\textbf{nCr}\text{ – Number of combinations ("n choose r")} \\
+\textbf{P(X=r)}\text{ – Probability of an exact number of successes happening. (i.e getting an exact number of Alt supporting reads in RNA)}
+\\~\\
+\textbf{Cumulative Distribution Function}\\
+P(AD_{alt} \ge 2) = 1 - P(AD_{alt} = 0) - P(AD_{alt} = 1)
+$$
+
+- $P(AD_{alt} \ge 2)$: Probability of observing at least 2 alternate
+  allele reads.
+
+- Calculated using the cumulative binomial probability function (e.g.,
+  `pbinom()` in R).
+
+**Classification Threshold:** Variants with $P(AD_{alt} \ge 2) > 95 \%$
+are classified as **expecting RNA support**.
+
+> **NOTE**
+>
+> The assumptions of no allele-specific or cell-specific heterogeneity
+> in expression is obviously not safe. We do this nonetheless, since any
+> inaccuracy of our theoretical RNA support calculation is not
+> problematic so long as the residuals to our model are reasonably
+> consistent across samples.
+
+**Intuitive explanation**
+
+Assuming no allele-specific expression and uniform expression across all
+cells, a DNA variant with a <u>50% variant allele frequency (VAF)</u>
+should be present in approximately 50% of the RNA reads at that locus.
+Here’s how RNA depth influences the probability of detecting such a
+variant in the RNA, assuming we need at least 2 read support to call it:
+
+| RNA Depth | Likelihood of Observing RNA support ($\ge 2$ **variant**-supportin**g reads)** |
+|----|----|
+| 2 | 25% |
+| 3 | 50% |
+| 10 | 99% |
+| High Depth (e.g., \>= 100 reads) | Approaching certainty |
+
+By filtering variants based on these probabilities, we can identify
+those very likely to have RNA support. If these high-probability
+variants show low RNA support, it raises concerns about their
+authenticity (or RNA sample purity)
+
+### Note on Assumptions
+
+We acknowledge that assuming no allele-specific or cell-specific
+heterogeneity in expression is an oversimplification. However,
+inaccuracies in our theoretical RNA support calculations are acceptable
+as long as average deviation from expected degrees of RNA support is
+reasonably consistent across samples. It is the distribution of
+$P_{supp}$, not its absolute values which are used to identify outliers
+indicative of potential artificial mutations.
