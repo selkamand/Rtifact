@@ -36,10 +36,52 @@ remotes::install_github("selkamand/Rtifact")
 
 ## Quick Start
 
-```{r example}
+### Run on a single VCF files
+
+The starting point of most analysis will be somatic tumour VCFs where DNA variants have also been genotyped in a matched RNA sample.
+
+[Oncoanalyser](https://nf-co.re/oncoanalyser/) will automatically produced this VCF so long as both DNA and RNA fastq files are supplied (see `<tumor_dna_id>.purple.somatic.vcf.gz` file)
+
+```{r}
+# Load library
 library(Rtifact)
 
+# Run from VCF
+vcf <- system.file("example.vcf", package = "Rtifact")
+compute_rna_support_ratio_from_vcf(
+  vcf, 
+  dna_sample = "DNA", # Name of tumour DNA sample 
+  rna_sample = "RNA"  # Name of tumour RNA sample
+)
+```
 
+
+### Run on cohort of VCF files
+
+```{r include=FALSE}
+unlink("cohort", recursive = TRUE)
+```
+
+```{r}
+# Run on a cohort using a manifest file
+manifest <- system.file("manifest.tsv", package = "Rtifact")
+
+# Lets create the VCFs we want to test on
+write_simulated_vcfs("cohort")
+
+compute_rna_support_ratio_from_manifest(
+  manifest, 
+  field_AF = "AF",
+  field_DP = "DP",
+  field_AD = "AD",
+  min_alt_supporting_reads = 2,
+  confidence = 0.95
+)
+```
+
+### Run from dataframe
+
+```{r}
 # Create a sample data frame representing mutations in a single sample
 sample_data <- data.frame(
   DNA_AF = c(0.5, 0.3, 0.2, 0.1),  # DNA variant allele frequencies
@@ -48,7 +90,7 @@ sample_data <- data.frame(
 )
 
 # Calculate Psupp for the sample
-Psupp <- artifact(
+Psupp <- compute_rna_support_ratio(
   data = sample_data,
   col_DNA_AF = "DNA_AF",
   col_RNA_DP = "RNA_DP",
@@ -57,6 +99,7 @@ Psupp <- artifact(
   confidence = 0.95
 )
 ```
+
 
 ## The artifact algorithm.
 
