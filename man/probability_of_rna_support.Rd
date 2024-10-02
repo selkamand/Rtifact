@@ -21,19 +21,19 @@ Probability a DNA mutation will have RNA support
 }
 \examples{
 # Single Variant
-probability_of_rna_support(DNAvaf = 0.5, RNAdepth = 1, min_alt_supporting_reads = 1)
+probability_of_rna_support(DNA_AF = 0.5, RNA_DP = 1, min_alt_supporting_reads = 1)
 
 # Multiple Variants
 probability_of_rna_support(
-  DNAvaf = c(0.5, 0.5, 0.1),
-  RNAdepth = c(1, 2, 2),
+  DNA_AF = c(0.5, 0.5, 0.1),
+  RNA_DP = c(1, 2, 2),
   min_alt_supporting_reads = c(1, 1, 2)
 )
 
 # Multiple variants using the same setting for 'min_alt_supporting_reads'
 probability_of_rna_support(
-  DNAvaf = c(0.5, 0.5),
-  RNAdepth = c(1, 2),
+  DNA_AF = c(0.5, 0.5),
+  RNA_DP = c(1, 2),
   min_alt_supporting_reads = 1
 )
 }
