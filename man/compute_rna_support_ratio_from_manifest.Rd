@@ -13,6 +13,7 @@ compute_rna_support_ratio_from_manifest(
   field_AD = "AD",
   pass_only = TRUE,
   sep = "\\t",
+  exclude_sex_chromosomes = TRUE,
   verbose = TRUE
 )
 }
@@ -41,6 +42,8 @@ classifying the variant as 'expected' to have RNA support.}
 \item{pass_only}{only compute rna support ratio using variants where FILTER=PASS in VCF (flag)}
 
 \item{sep}{delimiter used in manifest file.}
+
+\item{exclude_sex_chromosomes}{Exclude variants from sex chromosomes. See \code{\link[=sex_chromosomes]{sex_chromosomes()}} for all values of 'CHROM' we would identify as sex chromosomes. (flag)}
 
 \item{verbose}{verbose (flag)}
 }

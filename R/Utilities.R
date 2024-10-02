@@ -161,3 +161,28 @@ with_temp_seed <- function(seed, expr) {
 is_wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
   abs(x - round(x)) < tol
 }
+
+get_chrom_names <- function(vcf_obj){
+  as.character(vcf_obj@rowRanges@seqnames)
+}
+
+is_sex_chromosome <- function(vcf_obj, verbose = FALSE){
+  chr <- get_chrom_names(vcf_obj)
+
+  chr %in% sex_chromosomes()
+}
+
+#' Common Sex Chromosome Names
+#'
+#' @return a vector of common sex chromosome names
+#' @export
+#'
+#' @examples
+#' sex_chromosomes()
+sex_chromosomes <- function(){
+  chrom_prefixes <- c("chr", "Chr", "CHR","chrom", "CHROM", "")
+  sex_chromosomes <- c("x", "X", "y", "Y")
+  df_chroms <- expand.grid(chrom_prefixes, sex_chromosomes)
+  potential_sex_chroms <- paste0(df_chroms[[1]], df_chroms[[2]])
+  return(potential_sex_chroms)
+}
