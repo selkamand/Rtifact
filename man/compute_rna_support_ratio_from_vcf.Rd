@@ -50,5 +50,5 @@ Compute proportion of DNA mutations with RNA support
 }
 \examples{
 vcf <- system.file("example.vcf", package = "Rtifact")
-compute_rna_support_ratio_from_vcf(vcf)
+compute_rna_support_ratio_from_vcf(vcf, dna_sample = "DNA", rna_sample = "RNA")
 }

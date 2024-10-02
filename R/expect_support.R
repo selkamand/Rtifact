@@ -11,19 +11,19 @@
 #'
 #' @examples
 #' # Single Variant
-#' probability_of_rna_support(DNAvaf = 0.5, RNAdepth = 1, min_alt_supporting_reads = 1)
+#' probability_of_rna_support(DNA_AF = 0.5, RNA_DP = 1, min_alt_supporting_reads = 1)
 #'
 #' # Multiple Variants
 #' probability_of_rna_support(
-#'   DNAvaf = c(0.5, 0.5, 0.1),
-#'   RNAdepth = c(1, 2, 2),
+#'   DNA_AF = c(0.5, 0.5, 0.1),
+#'   RNA_DP = c(1, 2, 2),
 #'   min_alt_supporting_reads = c(1, 1, 2)
 #' )
 #'
 #' # Multiple variants using the same setting for 'min_alt_supporting_reads'
 #' probability_of_rna_support(
-#'   DNAvaf = c(0.5, 0.5),
-#'   RNAdepth = c(1, 2),
+#'   DNA_AF = c(0.5, 0.5),
+#'   RNA_DP = c(1, 2),
 #'   min_alt_supporting_reads = 1
 #' )
 probability_of_rna_support <- function(DNA_AF, RNA_DP, min_alt_supporting_reads = 2){
@@ -157,9 +157,10 @@ compute_rna_support_ratio <- function(
 #'
 #' @examples
 #' vcf <- system.file("example.vcf", package = "Rtifact")
-#' compute_rna_support_ratio_from_vcf(vcf)
+#' compute_rna_support_ratio_from_vcf(vcf, dna_sample = "DNA", rna_sample = "RNA")
 compute_rna_support_ratio_from_vcf <- function(
-    vcf, dna_sample,
+    vcf,
+    dna_sample,
     rna_sample,
     min_alt_supporting_reads = 2,
     confidence = 0.95,
@@ -168,7 +169,8 @@ compute_rna_support_ratio_from_vcf <- function(
     field_AD = "AD",
     pass_only = TRUE,
     return_data = FALSE,
-    verbose=TRUE
+    verbose=TRUE#,
+    #exclude_chromosomes = sex_chromosomes()
     ){
 
   # Assertions
@@ -264,15 +266,18 @@ compute_rna_support_ratio_from_vcf <- function(
 #' @export
 #'
 #' @examples
-#' manifest <- system.file("manifest.tsv", package = "Rtifact")
-#' compute_rna_support_ratio_from_manifest(
-#'   manifest,
-#'   field_AF = "AF",
-#'   field_DP = "AF",
-#'   field_AD = "AD",
-#'   min_alt_supporting_reads = 2,
-#'   confidence = 0.95
-#' )
+#' if(interactive()){
+#'   manifest <- system.file("manifest.tsv", package = "Rtifact")
+#'   write_simulated_vcfs("cohort")
+#'   compute_rna_support_ratio_from_manifest(
+#'     manifest,
+#'     field_AF = "AF",
+#'     field_DP = "DP",
+#'     field_AD = "AD",
+#'     min_alt_supporting_reads = 2,
+#'     confidence = 0.95
+#'   )
+#' }
 #'
 #' @inherit compute_rna_support_ratio_from_vcf description
 #' @inheritParams compute_rna_support_ratio_from_vcf
