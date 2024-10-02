@@ -117,7 +117,7 @@ sample_alt <- function(ref){
 #' @param prefix VCF name prefixes
 #' @param nsamples how many VCFs to make
 #' @param nvariants how many variants to write to each VCF
-#'
+#' @param seed random seed
 #' @return invisibly returns NULL. run for its side effects
 #' @export
 #'

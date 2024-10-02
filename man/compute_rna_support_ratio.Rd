@@ -47,7 +47,7 @@ Observed RNA support is based on presense of >= \code{min_alt_supporting_reads}.
 }
 \examples{
 
-Create a sample data frame representing mutations in a single sample
+# Create a sample data frame representing mutations in a single sample
 sample_data <- data.frame(
   DNA_AF = c(0.5, 0.3, 0.2, 0.1),  # DNA variant allele frequencies
   RNA_DP = c(100, 50, 20, 10),     # RNA read depths at each locus
