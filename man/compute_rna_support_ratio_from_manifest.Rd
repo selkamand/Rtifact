@@ -25,7 +25,24 @@ These are typically produced by calling the \href{https://github.com/hartwigmedi
 \item rna_sample: the name of the tumour RNA sample in the VCF
 }}
 
+\item{min_alt_supporting_reads}{the minimum number of alt supporting reads
+required to consider a DNA variant supported by RNA (numeric)}
+
+\item{confidence}{For any particular variant, the theoretical percentage of
+finding >=\code{min_alt_supporting_reads} above which we are comfortable
+classifying the variant as 'expected' to have RNA support.}
+
+\item{field_AF}{Genotype field that describes allele frequency uncorrected for tumour purity/ploidy. (string)}
+
+\item{field_DP}{Genotype field that describes read depth. (string)}
+
+\item{field_AD}{Genotype field that describes allelic depth. (string)}
+
+\item{pass_only}{only compute rna support ratio using variants where FILTER=PASS in VCF (flag)}
+
 \item{sep}{delimiter used in manifest file.}
+
+\item{verbose}{verbose (flag)}
 }
 \value{
 the manifest dataframe with an extra column 'rna_support_ratio' describing
@@ -45,4 +62,5 @@ compute_rna_support_ratio_from_manifest(
   min_alt_supporting_reads = 2,
   confidence = 0.95
 )
+
 }

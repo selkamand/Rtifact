@@ -20,6 +20,8 @@ write_simulated_vcfs(
 \item{nsamples}{how many VCFs to make}
 
 \item{nvariants}{how many variants to write to each VCF}
+
+\item{seed}{random seed}
 }
 \value{
 invisibly returns NULL. run for its side effects

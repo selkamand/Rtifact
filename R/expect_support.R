@@ -88,7 +88,7 @@ artifact_annotate_dataframe <- function(
 #'
 #' @examples
 #'
-#' Create a sample data frame representing mutations in a single sample
+#' # Create a sample data frame representing mutations in a single sample
 #' sample_data <- data.frame(
 #'   DNA_AF = c(0.5, 0.3, 0.2, 0.1),  # DNA variant allele frequencies
 #'   RNA_DP = c(100, 50, 20, 10),     # RNA read depths at each locus
@@ -273,6 +273,10 @@ compute_rna_support_ratio_from_vcf <- function(
 #'   min_alt_supporting_reads = 2,
 #'   confidence = 0.95
 #' )
+#'
+#' @inherit compute_rna_support_ratio_from_vcf description
+#' @inheritParams compute_rna_support_ratio_from_vcf
+#' @inheritParams compute_rna_support_ratio
 compute_rna_support_ratio_from_manifest <- function(
     manifest,
     min_alt_supporting_reads = 2,
