@@ -15,7 +15,8 @@ compute_rna_support_ratio_from_vcf(
   field_AD = "AD",
   pass_only = TRUE,
   return_data = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  exclude_sex_chromosomes = TRUE
 )
 }
 \arguments{
@@ -44,6 +45,8 @@ classifying the variant as 'expected' to have RNA support.}
 \item{return_data}{return the data.frame supplied to \code{\link[=compute_rna_support_ratio]{compute_rna_support_ratio()}} instead of the computed result. Mainly used for debug (flag)}
 
 \item{verbose}{verbose (flag)}
+
+\item{exclude_sex_chromosomes}{Exclude variants from sex chromosomes. See \code{\link[=sex_chromosomes]{sex_chromosomes()}} for all values of 'CHROM' we would identify as sex chromosomes. (flag)}
 }
 \description{
 Compute proportion of DNA mutations with RNA support

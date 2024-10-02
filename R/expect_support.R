@@ -151,6 +151,7 @@ compute_rna_support_ratio <- function(
 #' @param pass_only only compute rna support ratio using variants where FILTER=PASS in VCF (flag)
 #' @param return_data return the data.frame supplied to [compute_rna_support_ratio()] instead of the computed result. Mainly used for debug (flag)
 #' @param verbose verbose (flag)
+#' @param exclude_sex_chromosomes Exclude variants from sex chromosomes. See [sex_chromosomes()] for all values of 'CHROM' we would identify as sex chromosomes. (flag)
 #' @inherit compute_rna_support_ratio_from_vcf description return
 #' @inheritParams compute_rna_support_ratio
 #' @export
@@ -169,8 +170,8 @@ compute_rna_support_ratio_from_vcf <- function(
     field_AD = "AD",
     pass_only = TRUE,
     return_data = FALSE,
-    verbose=TRUE#,
-    #exclude_chromosomes = sex_chromosomes()
+    verbose=TRUE,
+    exclude_sex_chromosomes = TRUE
     ){
 
   # Assertions
@@ -217,6 +218,11 @@ compute_rna_support_ratio_from_vcf <- function(
   vcf_obj <- vcf_obj[!is_multiallelic(vcf_obj)]
   n_multiallelics <- sum(is_multiallelic(vcf_obj))
   if(verbose & n_multiallelics > 0) message("Found: ", n_multiallelics, " multiallelic sites which will be ignored by the Rtifact algorithm")
+
+  # Exclude Sex Chromosomes
+  if(exclude_sex_chromosomes){
+    vcf_obj <- vcf_obj[!is_sex_chromosome(vcf_obj)]
+  }
 
   # Extract the genotype Information we need
   geno <- VariantAnnotation::geno(vcf_obj)
@@ -291,6 +297,7 @@ compute_rna_support_ratio_from_manifest <- function(
     field_AD = "AD",
     pass_only = TRUE,
     sep = "\t",
+    exclude_sex_chromosomes = TRUE,
     verbose=TRUE
     ){
   if(!file.exists(manifest)) stop("Could not find manifest file: [", manifest,"]")
@@ -317,6 +324,7 @@ compute_rna_support_ratio_from_manifest <- function(
         field_DP = field_DP,
         field_AD = field_AD,
         pass_only = TRUE,
+        exclude_sex_chromosomes = exclude_sex_chromosomes,
         verbose = verbose
         )
       },
