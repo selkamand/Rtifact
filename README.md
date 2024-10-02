@@ -30,10 +30,72 @@ remotes::install_github("selkamand/Rtifact")
 
 ## Quick Start
 
+### Run on a single VCF files
+
+The starting point of most analysis will be somatic tumour VCFs where
+DNA variants have also been genotyped in a matched RNA sample.
+
+[Oncoanalyser](https://nf-co.re/oncoanalyser/) will automatically
+produced this VCF so long as both DNA and RNA fastq files are supplied
+(see `<tumor_dna_id>.purple.somatic.vcf.gz` file)
+
 ``` r
+# Load library
 library(Rtifact)
 
+# Run from VCF
+vcf <- system.file("example.vcf", package = "Rtifact")
+compute_rna_support_ratio_from_vcf(
+  vcf, 
+  dna_sample = "DNA", # Name of tumour DNA sample 
+  rna_sample = "RNA"  # Name of tumour RNA sample
+)
+#> [1] 0.5
+```
 
+### Run on cohort of VCF files
+
+``` r
+# Run on a cohort using a manifest file
+manifest <- system.file("manifest.tsv", package = "Rtifact")
+
+# Lets create the VCFs we want to test on
+write_simulated_vcfs("cohort")
+
+compute_rna_support_ratio_from_manifest(
+  manifest, 
+  field_AF = "AF",
+  field_DP = "DP",
+  field_AD = "AD",
+  min_alt_supporting_reads = 2,
+  confidence = 0.95
+)
+#>                        vcf dna_sample rna_sample rna_support_ratio
+#> 1   cohort/simulated_1.vcf        DNA        RNA         0.7272727
+#> 2  cohort/simulated_10.vcf        DNA        RNA         0.7272727
+#> 3  cohort/simulated_11.vcf        DNA        RNA         0.7272727
+#> 4  cohort/simulated_12.vcf        DNA        RNA         0.7272727
+#> 5  cohort/simulated_13.vcf        DNA        RNA         0.7272727
+#> 6  cohort/simulated_14.vcf        DNA        RNA         0.7272727
+#> 7  cohort/simulated_15.vcf        DNA        RNA         0.7272727
+#> 8  cohort/simulated_16.vcf        DNA        RNA         0.7272727
+#> 9  cohort/simulated_17.vcf        DNA        RNA         0.7272727
+#> 10 cohort/simulated_18.vcf        DNA        RNA         0.7272727
+#> 11 cohort/simulated_19.vcf        DNA        RNA         0.7272727
+#> 12  cohort/simulated_2.vcf        DNA        RNA         0.7272727
+#> 13 cohort/simulated_20.vcf        DNA        RNA         0.7272727
+#> 14  cohort/simulated_3.vcf        DNA        RNA         0.7272727
+#> 15  cohort/simulated_4.vcf        DNA        RNA         0.7272727
+#> 16  cohort/simulated_5.vcf        DNA        RNA         0.7272727
+#> 17  cohort/simulated_6.vcf        DNA        RNA         0.7272727
+#> 18  cohort/simulated_7.vcf        DNA        RNA         0.7272727
+#> 19  cohort/simulated_8.vcf        DNA        RNA         0.7272727
+#> 20  cohort/simulated_9.vcf        DNA        RNA         0.7272727
+```
+
+### Run from dataframe
+
+``` r
 # Create a sample data frame representing mutations in a single sample
 sample_data <- data.frame(
   DNA_AF = c(0.5, 0.3, 0.2, 0.1),  # DNA variant allele frequencies
@@ -42,7 +104,7 @@ sample_data <- data.frame(
 )
 
 # Calculate Psupp for the sample
-Psupp <- artifact(
+Psupp <- compute_rna_support_ratio(
   data = sample_data,
   col_DNA_AF = "DNA_AF",
   col_RNA_DP = "RNA_DP",
