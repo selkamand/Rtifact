@@ -122,8 +122,8 @@ sample_alt <- function(ref){
 #' @export
 #'
 #' @examples
-#' if(interactive){
-#' write_simulated_vcfs(outfolder="cohort")
+#' if(interactive()){
+#'   write_simulated_vcfs(outfolder="cohort")
 #' }
 write_simulated_vcfs <- function(outfolder = "cohort/", prefix = "simulated", nsamples = 20, nvariants = 20, seed = 111){
 

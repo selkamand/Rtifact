@@ -30,7 +30,7 @@ invisibly returns NULL. run for its side effects
 Used to test running in cohort mode from manifest
 }
 \examples{
-if(interactive){
-write_simulated_vcfs(outfolder="cohort")
+if(interactive()){
+  write_simulated_vcfs(outfolder="cohort")
 }
 }

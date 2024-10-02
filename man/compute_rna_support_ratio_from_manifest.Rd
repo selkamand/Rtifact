@@ -53,14 +53,17 @@ see  RNA evidence for and observed that RNA evidence in practice.
 Compute RNA support from multiple VCFs
 }
 \examples{
-manifest <- system.file("manifest.tsv", package = "Rtifact")
-compute_rna_support_ratio_from_manifest(
-  manifest,
-  field_AF = "AF",
-  field_DP = "AF",
-  field_AD = "AD",
-  min_alt_supporting_reads = 2,
-  confidence = 0.95
-)
+if(interactive()){
+  manifest <- system.file("manifest.tsv", package = "Rtifact")
+  write_simulated_vcfs("cohort")
+  compute_rna_support_ratio_from_manifest(
+    manifest,
+    field_AF = "AF",
+    field_DP = "DP",
+    field_AD = "AD",
+    min_alt_supporting_reads = 2,
+    confidence = 0.95
+  )
+}
 
 }
