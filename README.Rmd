@@ -89,8 +89,8 @@ sample_data <- data.frame(
   RNA_AD = c(48, 15, 4, 0)         # RNA reads supporting the alternate allele
 )
 
-# Calculate Psupp for the sample
-Psupp <- compute_rna_support_ratio(
+# Calculate RNA support evaluation
+compute_rna_support_ratio(
   data = sample_data,
   col_DNA_AF = "DNA_AF",
   col_RNA_DP = "RNA_DP",
@@ -103,7 +103,7 @@ Psupp <- compute_rna_support_ratio(
 
 ## The artifact algorithm.
 
-**F[or each sample]{.underline}** (with a substantial number of mutations)
+**[For each sample]{.underline}** (with a substantial number of mutations)
 
 1.  **Identify Mutations**: Select all autosomal, exonic mutations
 

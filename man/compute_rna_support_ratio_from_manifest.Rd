@@ -53,7 +53,10 @@ the manifest dataframe with an extra column 'rna_support_ratio' describing
 see  RNA evidence for and observed that RNA evidence in practice.
 }
 \description{
-Compute RNA support from multiple VCFs
+In what proportion of the DNA mutations which theoretically should have RNA support
+do we observe that support.
+Expectation of RNA support is based on DNA allele frequency and RNA depth.
+Observed RNA support is based on presense of >= \code{min_alt_supporting_reads}.
 }
 \examples{
 if(interactive()){

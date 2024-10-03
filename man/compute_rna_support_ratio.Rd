@@ -10,7 +10,8 @@ compute_rna_support_ratio(
   col_RNA_DP = "RNA_DP",
   col_RNA_AD = "RNA_AD",
   min_alt_supporting_reads = 2,
-  confidence = 0.95
+  confidence = 0.95,
+  simple = FALSE
 )
 }
 \arguments{
@@ -34,10 +35,17 @@ required to consider a DNA variant supported by RNA (numeric)}
 \item{confidence}{For any particular variant, the theoretical percentage of
 finding >=\code{min_alt_supporting_reads} above which we are comfortable
 classifying the variant as 'expected' to have RNA support.}
+
+\item{simple}{just return Psupp instead of a full rna_support obj}
 }
 \value{
-\strong{Psupp}: The proportion of variants in the sample where we
-expected to see  RNA evidence for and observed that RNA evidence in practice.
+A list of class \code{rna_support} containing the following components:
+\describe{
+\item{\strong{total_variants_evaluated}}{Integer. The total number of variants evaluated for RNA support.}
+\item{\strong{expected_rna_support_variants}}{Integer. The number of variants expected to show RNA support based on their DNA characteristics (e.g., variant allele frequency, read depth).}
+\item{\strong{proportion_with_observed_support}}{Numeric. The proportion of variants expected to show RNA support where RNA support was actually observed. Sometimes called 'Psupp'}
+\item{\strong{proportion_unexpected_with_observed_support}}{Numeric. The proportion of variants not expected to show RNA support that nonetheless had RNA support observed.}
+}
 }
 \description{
 In what proportion of the DNA mutations which theoretically should have RNA support
@@ -46,7 +54,6 @@ Expectation of RNA support is based on DNA allele frequency and RNA depth.
 Observed RNA support is based on presense of >= \code{min_alt_supporting_reads}.
 }
 \examples{
-
 # Create a sample data frame representing mutations in a single sample
 sample_data <- data.frame(
   DNA_AF = c(0.5, 0.3, 0.2, 0.1),  # DNA variant allele frequencies
