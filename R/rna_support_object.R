@@ -61,7 +61,7 @@ print.rna_support <- function(x, ...) {
   cat("Total Variants: ", x$total_variants_evaluated, "\n")
   cat("[Nexpected] Variants Expected to have RNA Support: ", x$expected_rna_support_variants, "\n")
   cat(
-    sprintf("[Psupp] Observed rate of support: \033[4m%.1f%%\033[24m (%d/%d)",
+    sprintf("[Psupp] Observed rate of support: %.1f%% (%d/%d)",
       x$proportion_with_observed_support * 100,
       round(x$proportion_with_observed_support * x$expected_rna_support_variants, digits = 0),
       x$expected_rna_support_variants

@@ -54,7 +54,7 @@ compute_rna_support_ratio_from_vcf(
 #> ----------------------------
 #> Total Variants:  3 
 #> [Nexpected] Variants Expected to have RNA Support:  2 
-#> [Psupp] Observed rate of support: [4m50.0%[24m (1/2) 
+#> [Psupp] Observed rate of support: 50.0% (1/2) 
 #> ----------------------------
 ```
 
@@ -163,7 +163,7 @@ compute_rna_support_ratio(
 #> ----------------------------
 #> Total Variants:  4 
 #> [Nexpected] Variants Expected to have RNA Support:  2 
-#> [Psupp] Observed rate of support: [4m100.0%[24m (2/2) 
+#> [Psupp] Observed rate of support: 100.0% (2/2) 
 #> ----------------------------
 ```
 
@@ -175,8 +175,8 @@ compute_rna_support_ratio(
 
 2.  **Calculate Expected RNA Support:** Determine which DNA mutations
     are expected to have RNA support (by default, ≥2 supporting reads)
-    based on DNA variant allele frequency $(\text{DNA}_{VAF})$ and RNA
-    depth $(RNA_{DP})$. Denote this count as $N_{expected}$. See
+    based on DNA variant allele frequency $\mathrm{DNA}_{VAF}$ and RNA
+    depth $\mathrm{RNA}_{DP}$. Denote this count as $N_{expected}$. See
     section: \[**Classifying mutations based on whether RNA support is
     expected**\].
 
