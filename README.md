@@ -175,8 +175,8 @@ compute_rna_support_ratio(
 
 2.  **Calculate Expected RNA Support:** Determine which DNA mutations
     are expected to have RNA support (by default, ≥2 supporting reads)
-    based on DNA variant allele frequency $\mathrm{DNA}_{VAF}$ and RNA
-    depth $\mathrm{RNA}_{DP}$. Denote this count as $N_{expected}$. See
+    based on DNA variant allele frequency (DNA<sub>VAF</sub>) and RNA
+    depth RNA<sub>DP</sub>. Denote this count as $N_{expected}$. See
     section: \[**Classifying mutations based on whether RNA support is
     expected**\].
 
