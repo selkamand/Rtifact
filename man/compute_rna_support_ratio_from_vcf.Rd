@@ -48,8 +48,20 @@ classifying the variant as 'expected' to have RNA support.}
 
 \item{exclude_sex_chromosomes}{Exclude variants from sex chromosomes. See \code{\link[=sex_chromosomes]{sex_chromosomes()}} for all values of 'CHROM' we would identify as sex chromosomes. (flag)}
 }
+\value{
+A list of class \code{rna_support} containing the following components:
+\describe{
+\item{\strong{total_variants_evaluated}}{Integer. The total number of variants evaluated for RNA support.}
+\item{\strong{expected_rna_support_variants}}{Integer. The number of variants expected to show RNA support based on their DNA characteristics (e.g., variant allele frequency, read depth).}
+\item{\strong{proportion_with_observed_support}}{Numeric. The proportion of variants expected to show RNA support where RNA support was actually observed. Sometimes called 'Psupp'}
+\item{\strong{proportion_unexpected_with_observed_support}}{Numeric. The proportion of variants not expected to show RNA support that nonetheless had RNA support observed.}
+}
+}
 \description{
-Compute proportion of DNA mutations with RNA support
+In what proportion of the DNA mutations which theoretically should have RNA support
+do we observe that support.
+Expectation of RNA support is based on DNA allele frequency and RNA depth.
+Observed RNA support is based on presense of >= \code{min_alt_supporting_reads}.
 }
 \examples{
 vcf <- system.file("example.vcf", package = "Rtifact")

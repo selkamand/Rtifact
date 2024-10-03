@@ -80,14 +80,13 @@ artifact_annotate_dataframe <- function(
 #' @param confidence For any particular variant, the theoretical percentage of
 #' finding >=`min_alt_supporting_reads` above which we are comfortable
 #' classifying the variant as 'expected' to have RNA support.
+#' @param simple just return Psupp instead of a full rna_support obj
 #'
-#' @return \strong{Psupp}: The proportion of variants in the sample where we
-#' expected to see  RNA evidence for and observed that RNA evidence in practice.
+#' @inherit create_rna_support_result return
 #'
 #' @export
 #'
 #' @examples
-#'
 #' # Create a sample data frame representing mutations in a single sample
 #' sample_data <- data.frame(
 #'   DNA_AF = c(0.5, 0.3, 0.2, 0.1),  # DNA variant allele frequencies
@@ -110,7 +109,8 @@ compute_rna_support_ratio <- function(
     col_RNA_DP = "RNA_DP",
     col_RNA_AD = "RNA_AD",
     min_alt_supporting_reads = 2,
-    confidence = 0.95
+    confidence = 0.95,
+    simple = FALSE
   ){
 
   prob_rna_support <- probability_of_rna_support(
@@ -129,14 +129,24 @@ compute_rna_support_ratio <- function(
   rna_supported = data[[col_RNA_AD]] >= min_alt_supporting_reads
 
   n_expecting_support = sum(expecting_rna_support)
+  n_not_expecting_support = sum(!expecting_rna_support)
   n_supported = sum(rna_supported)
 
   n_expectedly_supported = sum(expecting_rna_support & rna_supported)
   n_unxpectedly_supported = sum(!expecting_rna_support & rna_supported)
 
   Psupp <- n_expectedly_supported/n_expecting_support
+  Psupp_unexpected <- n_unxpectedly_supported/n_not_expecting_support
 
-  return(Psupp)
+  if(simple) return(Psupp)
+
+  # Create the result object
+  create_rna_support_result(
+    total_variants = nrow(data),
+    expected_variants = n_expecting_support,
+    observed_support_proportion = Psupp,
+    unexpected_support_proportion = Psupp_unexpected
+  )
 }
 
 #' Compute proportion of DNA mutations with RNA support
@@ -152,7 +162,7 @@ compute_rna_support_ratio <- function(
 #' @param return_data return the data.frame supplied to [compute_rna_support_ratio()] instead of the computed result. Mainly used for debug (flag)
 #' @param verbose verbose (flag)
 #' @param exclude_sex_chromosomes Exclude variants from sex chromosomes. See [sex_chromosomes()] for all values of 'CHROM' we would identify as sex chromosomes. (flag)
-#' @inherit compute_rna_support_ratio_from_vcf description return
+#' @inherit compute_rna_support_ratio description return
 #' @inheritParams compute_rna_support_ratio
 #' @export
 #'
@@ -310,11 +320,11 @@ compute_rna_support_ratio_from_manifest <- function(
   if(!"rna_sample" %in% cnames) stop("Manifest file must include the column: 'rna_sample'")
   if(!nrow(df_manifest) > 0) stop("Manifest is empty")
 
-  df_manifest[["rna_support_ratio"]] <- vapply(
+  ls_rna_support <- lapply(
     X = seq_len(nrow(df_manifest)),
     FUN = \(i){
       sample <- df_manifest[i, , drop = FALSE]
-      compute_rna_support_ratio_from_vcf(
+      res <- compute_rna_support_ratio_from_vcf(
         vcf = sample[["vcf"]],
         dna_sample =  sample[["dna_sample"]],
         rna_sample =  sample[["rna_sample"]],
@@ -327,12 +337,17 @@ compute_rna_support_ratio_from_manifest <- function(
         exclude_sex_chromosomes = exclude_sex_chromosomes,
         verbose = verbose
         )
-      },
-    FUN.VALUE = numeric(1)
+      as.data.frame(res)
+      }
   )
 
-  return(df_manifest)
+  df_rna_support <- do.call(rbind, ls_rna_support)
 
+  if(nrow(df_rna_support) != nrow(df_manifest)) stop("Valid RNA support could not be computed for all samples in the manifest")
+
+  df_manifest <- cbind(df_manifest, df_rna_support)
+
+  return(df_manifest)
 }
 
 

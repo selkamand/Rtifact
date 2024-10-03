@@ -42,6 +42,37 @@ is_pass <- function(vcf_obj){
 }
 
 
+
+is_wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
+  abs(x - round(x)) < tol
+}
+
+get_chrom_names <- function(vcf_obj){
+  as.character(vcf_obj@rowRanges@seqnames)
+}
+
+is_sex_chromosome <- function(vcf_obj, verbose = FALSE){
+  chr <- get_chrom_names(vcf_obj)
+
+  chr %in% sex_chromosomes()
+}
+
+#' Common Sex Chromosome Names
+#'
+#' @return a vector of common sex chromosome names
+#' @export
+#'
+#' @examples
+#' sex_chromosomes()
+sex_chromosomes <- function(){
+  chrom_prefixes <- c("chr", "Chr", "CHR","chrom", "CHROM", "")
+  sex_chromosomes <- c("x", "X", "y", "Y")
+  df_chroms <- expand.grid(chrom_prefixes, sex_chromosomes)
+  potential_sex_chroms <- paste0(df_chroms[[1]], df_chroms[[2]])
+  return(potential_sex_chroms)
+}
+
+
 # Simulate ----------------------------------------------------------------
 
 write_simulated_vcf <- function(outfile, nvariants=20){
@@ -91,7 +122,7 @@ write_simulated_vcf <- function(outfile, nvariants=20){
     format = format,
     dna_gt = paste(dna_gt, dna_af, dna_ad, dna_dp, sep = ":"),
     rna_gt = paste(rna_gt, rna_af, rna_ad, rna_dp, sep = ":")
-    )
+  )
 
   # Write VCF
   file.create(outfile)
@@ -103,10 +134,10 @@ sample_alt <- function(ref){
   vapply(
     X=ref,
     FUN = function(r){
-        sample(size = 1, x = setdiff(c("A", "C", "T", "G"), r))
-      },
+      sample(size = 1, x = setdiff(c("A", "C", "T", "G"), r))
+    },
     FUN.VALUE = character(1)
-    )
+  )
 }
 
 #' Generates a bunch simulated VCFs
@@ -131,9 +162,11 @@ write_simulated_vcfs <- function(outfolder = "cohort/", prefix = "simulated", ns
   dir.create(outfolder)
   paths = paste0(outfolder, "/", prefix,'_', seq_len(nsamples), ".vcf")
 
-  for (path in paths){
-    with_temp_seed(seed = seed, {write_simulated_vcf(outfile = path, nvariants = nvariants)})
-  }
+  with_temp_seed(seed = seed, {
+    for (path in paths){
+      write_simulated_vcf(outfile = path, nvariants = nvariants)
+    }
+  })
 
   invisible(NULL)
 }
@@ -156,33 +189,4 @@ with_temp_seed <- function(seed, expr) {
   }, add = TRUE)
 
   force(expr)
-}
-
-is_wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
-  abs(x - round(x)) < tol
-}
-
-get_chrom_names <- function(vcf_obj){
-  as.character(vcf_obj@rowRanges@seqnames)
-}
-
-is_sex_chromosome <- function(vcf_obj, verbose = FALSE){
-  chr <- get_chrom_names(vcf_obj)
-
-  chr %in% sex_chromosomes()
-}
-
-#' Common Sex Chromosome Names
-#'
-#' @return a vector of common sex chromosome names
-#' @export
-#'
-#' @examples
-#' sex_chromosomes()
-sex_chromosomes <- function(){
-  chrom_prefixes <- c("chr", "Chr", "CHR","chrom", "CHROM", "")
-  sex_chromosomes <- c("x", "X", "y", "Y")
-  df_chroms <- expand.grid(chrom_prefixes, sex_chromosomes)
-  potential_sex_chroms <- paste0(df_chroms[[1]], df_chroms[[2]])
-  return(potential_sex_chroms)
 }

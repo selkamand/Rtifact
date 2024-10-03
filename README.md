@@ -50,7 +50,12 @@ compute_rna_support_ratio_from_vcf(
   dna_sample = "DNA", # Name of tumour DNA sample 
   rna_sample = "RNA"  # Name of tumour RNA sample
 )
-#> [1] 0.5
+#> RNA Support Evaluation Result:
+#> ----------------------------
+#> Total Variants:  3 
+#> [Nexpected] Variants Expected to have RNA Support:  2 
+#> [Psupp] Observed rate of support: [4m50.0%[24m (1/2) 
+#> ----------------------------
 ```
 
 ### Run on cohort of VCF files
@@ -70,27 +75,69 @@ compute_rna_support_ratio_from_manifest(
   min_alt_supporting_reads = 2,
   confidence = 0.95
 )
-#>                        vcf dna_sample rna_sample rna_support_ratio
-#> 1   cohort/simulated_1.vcf        DNA        RNA         0.7272727
-#> 2  cohort/simulated_10.vcf        DNA        RNA         0.7272727
-#> 3  cohort/simulated_11.vcf        DNA        RNA         0.7272727
-#> 4  cohort/simulated_12.vcf        DNA        RNA         0.7272727
-#> 5  cohort/simulated_13.vcf        DNA        RNA         0.7272727
-#> 6  cohort/simulated_14.vcf        DNA        RNA         0.7272727
-#> 7  cohort/simulated_15.vcf        DNA        RNA         0.7272727
-#> 8  cohort/simulated_16.vcf        DNA        RNA         0.7272727
-#> 9  cohort/simulated_17.vcf        DNA        RNA         0.7272727
-#> 10 cohort/simulated_18.vcf        DNA        RNA         0.7272727
-#> 11 cohort/simulated_19.vcf        DNA        RNA         0.7272727
-#> 12  cohort/simulated_2.vcf        DNA        RNA         0.7272727
-#> 13 cohort/simulated_20.vcf        DNA        RNA         0.7272727
-#> 14  cohort/simulated_3.vcf        DNA        RNA         0.7272727
-#> 15  cohort/simulated_4.vcf        DNA        RNA         0.7272727
-#> 16  cohort/simulated_5.vcf        DNA        RNA         0.7272727
-#> 17  cohort/simulated_6.vcf        DNA        RNA         0.7272727
-#> 18  cohort/simulated_7.vcf        DNA        RNA         0.7272727
-#> 19  cohort/simulated_8.vcf        DNA        RNA         0.7272727
-#> 20  cohort/simulated_9.vcf        DNA        RNA         0.7272727
+#>                        vcf dna_sample rna_sample total_variants_evaluated
+#> 1   cohort/simulated_1.vcf        DNA        RNA                       17
+#> 2  cohort/simulated_10.vcf        DNA        RNA                       18
+#> 3  cohort/simulated_11.vcf        DNA        RNA                       20
+#> 4  cohort/simulated_12.vcf        DNA        RNA                       16
+#> 5  cohort/simulated_13.vcf        DNA        RNA                       20
+#> 6  cohort/simulated_14.vcf        DNA        RNA                       18
+#> 7  cohort/simulated_15.vcf        DNA        RNA                       16
+#> 8  cohort/simulated_16.vcf        DNA        RNA                       18
+#> 9  cohort/simulated_17.vcf        DNA        RNA                       19
+#> 10 cohort/simulated_18.vcf        DNA        RNA                       19
+#> 11 cohort/simulated_19.vcf        DNA        RNA                       19
+#> 12  cohort/simulated_2.vcf        DNA        RNA                       20
+#> 13 cohort/simulated_20.vcf        DNA        RNA                       17
+#> 14  cohort/simulated_3.vcf        DNA        RNA                       17
+#> 15  cohort/simulated_4.vcf        DNA        RNA                       18
+#> 16  cohort/simulated_5.vcf        DNA        RNA                       17
+#> 17  cohort/simulated_6.vcf        DNA        RNA                       17
+#> 18  cohort/simulated_7.vcf        DNA        RNA                       20
+#> 19  cohort/simulated_8.vcf        DNA        RNA                       20
+#> 20  cohort/simulated_9.vcf        DNA        RNA                       16
+#>    expected_rna_support_variants proportion_unexpected_with_observed_support
+#> 1                             11                                   0.3333333
+#> 2                              7                                   0.4545455
+#> 3                              2                                   0.2777778
+#> 4                              6                                   0.4000000
+#> 5                             10                                   0.7000000
+#> 6                              8                                   0.0000000
+#> 7                              8                                   0.2500000
+#> 8                              3                                   0.5333333
+#> 9                              5                                   0.5000000
+#> 10                             5                                   0.3571429
+#> 11                             7                                   0.3333333
+#> 12                             8                                   0.2500000
+#> 13                             5                                   0.4166667
+#> 14                             5                                   0.2500000
+#> 15                             8                                   0.3000000
+#> 16                             6                                   0.3636364
+#> 17                            10                                   0.4285714
+#> 18                             8                                   0.4166667
+#> 19                             6                                   0.5000000
+#> 20                             5                                   0.0000000
+#>    proportion_with_observed_support
+#> 1                         0.7272727
+#> 2                         0.7142857
+#> 3                         1.0000000
+#> 4                         0.8333333
+#> 5                         0.9000000
+#> 6                         0.7500000
+#> 7                         0.7500000
+#> 8                         0.6666667
+#> 9                         1.0000000
+#> 10                        1.0000000
+#> 11                        0.8571429
+#> 12                        0.8750000
+#> 13                        0.8000000
+#> 14                        1.0000000
+#> 15                        0.8750000
+#> 16                        1.0000000
+#> 17                        0.9000000
+#> 18                        0.8750000
+#> 19                        0.6666667
+#> 20                        1.0000000
 ```
 
 ### Run from dataframe
@@ -103,8 +150,8 @@ sample_data <- data.frame(
   RNA_AD = c(48, 15, 4, 0)         # RNA reads supporting the alternate allele
 )
 
-# Calculate Psupp for the sample
-Psupp <- compute_rna_support_ratio(
+# Calculate RNA support evaluation
+compute_rna_support_ratio(
   data = sample_data,
   col_DNA_AF = "DNA_AF",
   col_RNA_DP = "RNA_DP",
@@ -112,11 +159,17 @@ Psupp <- compute_rna_support_ratio(
   min_alt_supporting_reads = 2,
   confidence = 0.95
 )
+#> RNA Support Evaluation Result:
+#> ----------------------------
+#> Total Variants:  4 
+#> [Nexpected] Variants Expected to have RNA Support:  2 
+#> [Psupp] Observed rate of support: [4m100.0%[24m (2/2) 
+#> ----------------------------
 ```
 
 ## The artifact algorithm.
 
-**F<u>or each sample</u>** (with a substantial number of mutations)
+**<u>For each sample</u>** (with a substantial number of mutations)
 
 1.  **Identify Mutations**: Select all autosomal, exonic mutations
 
