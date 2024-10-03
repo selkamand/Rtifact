@@ -55,7 +55,6 @@ compute_rna_support_ratio_from_vcf(
 )
 ```
 
-
 ### Run on cohort of VCF files
 
 ```{r include=FALSE}
@@ -89,8 +88,8 @@ sample_data <- data.frame(
   RNA_AD = c(48, 15, 4, 0)         # RNA reads supporting the alternate allele
 )
 
-# Calculate Psupp for the sample
-Psupp <- compute_rna_support_ratio(
+# Calculate RNA support evaluation
+compute_rna_support_ratio(
   data = sample_data,
   col_DNA_AF = "DNA_AF",
   col_RNA_DP = "RNA_DP",
@@ -100,14 +99,13 @@ Psupp <- compute_rna_support_ratio(
 )
 ```
 
-
 ## The artifact algorithm.
 
-**F[or each sample]{.underline}** (with a substantial number of mutations)
+[**For each sample**]{.underline} (with a substantial number of mutations)
 
 1.  **Identify Mutations**: Select all autosomal, exonic mutations
 
-2.  **Calculate Expected RNA Support:** Determine which DNA mutations are expected to have RNA support (by default, ≥2 supporting reads) based on DNA variant allele frequency ($\text{DNA}_{VAF}$) and RNA depth ($RNA_{DP}$). Denote this count as $N_{expected}$. See section: [**Classifying mutations based on whether RNA support is expected**].
+2.  **Calculate Expected RNA Support:** Determine which DNA mutations are expected to have RNA support (by default, ≥2 supporting reads) based on DNA variant allele frequency (DNA~VAF~) and RNA depth RNA~DP~. Denote this count as $N_{expected}$. See section: [**Classifying mutations based on whether RNA support is expected**].
 
 3.  **Assess Actual Support**: Count how many of the mutations that theoretically should have RNA support actually have support ($N_{supp}$)
 
