@@ -169,14 +169,14 @@ compute_rna_support_ratio(
 
 ## The artifact algorithm.
 
-**<u>For each sample</u>** (with a substantial number of mutations)
+<u>**For each sample**</u> (with a substantial number of mutations)
 
 1.  **Identify Mutations**: Select all autosomal, exonic mutations
 
 2.  **Calculate Expected RNA Support:** Determine which DNA mutations
     are expected to have RNA support (by default, ≥2 supporting reads)
-    based on DNA variant allele frequency ($\text{DNA}_{VAF}$) and RNA
-    depth ($RNA_{DP}$). Denote this count as $N_{expected}$. See
+    based on DNA variant allele frequency $(\text{DNA}_{VAF})$ and RNA
+    depth $(RNA_{DP})$. Denote this count as $N_{expected}$. See
     section: \[**Classifying mutations based on whether RNA support is
     expected**\].
 
