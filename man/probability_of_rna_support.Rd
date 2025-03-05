@@ -4,7 +4,7 @@
 \alias{probability_of_rna_support}
 \title{Probability a DNA mutation will have RNA support}
 \usage{
-probability_of_rna_support(DNA_AF, RNA_DP, min_alt_supporting_reads = 2)
+probability_of_rna_support(DNA_AF, RNA_DP, min_alt_supporting_reads = 1)
 }
 \arguments{
 \item{DNA_AF}{the unadjusted allele frequency of the variant (numeric)}

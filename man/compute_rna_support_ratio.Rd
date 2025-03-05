@@ -9,7 +9,7 @@ compute_rna_support_ratio(
   col_DNA_AF = "DNA_AF",
   col_RNA_DP = "RNA_DP",
   col_RNA_AD = "RNA_AD",
-  min_alt_supporting_reads = 2,
+  min_alt_supporting_reads = 1,
   confidence = 0.95,
   simple = FALSE
 )

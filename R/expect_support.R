@@ -173,7 +173,7 @@ compute_rna_support_ratio_from_vcf <- function(
     vcf,
     dna_sample,
     rna_sample,
-    min_alt_supporting_reads = 2,
+    min_alt_supporting_reads = 1,
     confidence = 0.95,
     field_AF = "AF",
     field_DP = "DP",
