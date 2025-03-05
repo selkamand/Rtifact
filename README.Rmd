@@ -177,7 +177,7 @@ P(AD_{alt} \ge 2) = 1 - P(AD_{alt} = 0) - P(AD_{alt} = 1)
 Assuming no allele-specific expression and uniform expression across all cells, a DNA variant with a [50% variant allele frequency (VAF)]{.underline} should be present in approximately 50% of the RNA reads at that locus. Here's how RNA depth influences the probability of detecting such a variant in the RNA, assuming we need at least 2 read support to call it:
 
 | RNA Depth | Likelihood of Observing RNA support ($\ge 2$ **variant**-supportin**g reads)** |
-|----------------------------|--------------------------------------------|
+|----|----|
 | 2 | 25% |
 | 3 | 50% |
 | 10 | 99% |

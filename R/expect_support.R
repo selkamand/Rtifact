@@ -26,7 +26,7 @@
 #'   RNA_DP = c(1, 2),
 #'   min_alt_supporting_reads = 1
 #' )
-probability_of_rna_support <- function(DNA_AF, RNA_DP, min_alt_supporting_reads = 2){
+probability_of_rna_support <- function(DNA_AF, RNA_DP, min_alt_supporting_reads = 1){
   if(any(min_alt_supporting_reads <= 0)) stop("min_alt_supporting_reads must be greater than zero")
 
   # Calculate the probability of observing at least min_alt_supporting_reads
@@ -40,7 +40,7 @@ artifact_annotate_dataframe <- function(
     data,
     col_DNA_AF = "DNA_AF",
     col_RNA_DP = "RNA_DP",
-    min_alt_supporting_reads = 2,
+    min_alt_supporting_reads = 1,
     confidence = 0.95){
 
   data[["probability_of_rna_support"]] <- probability_of_rna_support(
@@ -108,7 +108,7 @@ compute_rna_support_ratio <- function(
     col_DNA_AF = "DNA_AF",
     col_RNA_DP = "RNA_DP",
     col_RNA_AD = "RNA_AD",
-    min_alt_supporting_reads = 2,
+    min_alt_supporting_reads = 1,
     confidence = 0.95,
     simple = FALSE
   ){
